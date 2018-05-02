@@ -5,4 +5,6 @@ package com.assignment.coding.furnitureapp.views;
  */
 
 public interface IMainView {
+    public void initializeElements();
+    public void initializeMainFragment();
 }
