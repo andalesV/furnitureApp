@@ -1,15 +1,71 @@
 package com.assignment.coding.furnitureapp.main;
 
-import android.support.v7.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.assignment.coding.furnitureapp.R;
+import com.assignment.coding.furnitureapp.camera.CameraActivity;
+import com.assignment.coding.furnitureapp.views.IMainView;
 
-public class MainActivity extends AppCompatActivity {
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
+import static com.assignment.coding.furnitureapp.Utils.Utils.LOG_TAG;
+import static com.assignment.coding.furnitureapp.Utils.Utils.getOutputMediaFile;
+
+public class MainActivity extends AppCompatActivity implements IMainView{
+
+    @BindView(R.id.toolbar)
+    public Toolbar mToolBar;
+
+    private MainPresenter mainPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mainPresenter = new MainPresenter(this);
+        mainPresenter.initializeElements();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mainPresenter.initializeMainFragment();
+    }
+
+    @Override
+    public void initializeElements() {
+        ButterKnife.bind(this);
+        setSupportActionBar(mToolBar);
+    }
+
+    @Override
+    public void initializeMainFragment() {
+        MainFragment mainFragment = new MainFragment();
+        getFragmentManager()
+                .beginTransaction()
+                .add(R.id.container, mainFragment)
+                .commit();
+    }
+
+
 }
