@@ -6,35 +6,35 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.assignment.coding.furnitureapp.R;
 import com.assignment.coding.furnitureapp.camera.CameraActivity;
+import com.assignment.coding.furnitureapp.gallery.GalleryActivity;
+import com.assignment.coding.furnitureapp.item.ItemsActivity;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
+import static com.assignment.coding.furnitureapp.Utils.Utils.LOG_TAG;
 import static com.assignment.coding.furnitureapp.Utils.Utils.getOutputMediaFile;
 
 /**
  * Created by victo on 03/05/2018.
  */
 
-public class MainFragment extends Fragment implements View.OnClickListener{
+public class MainFragment extends Fragment implements View.OnClickListener {
 
     private View view;
 
@@ -58,7 +58,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_main, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
         captureImgView.setOnClickListener(this);
         galleryImgView.setOnClickListener(this);
         listItemImgView.setOnClickListener(this);
@@ -69,61 +69,24 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         return view;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-
-            Uri uri = data.getData();
-
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-
-                final File file = getOutputMediaFile(MEDIA_TYPE_IMAGE, context);
-
-//                ImageView imageView = (ImageView) findViewById(R.id.imageView);
-//                imageView.setImageBitmap(bitmap);
-
-                save(bitmap,file);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void capture(){
+    public void capture() {
         Intent intent = new Intent(context, CameraActivity.class);
         startActivity(intent);
-        Toast.makeText(context,"test",Toast.LENGTH_LONG).show();
     }
 
-    public void openGallery(){
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, getString(R.string.selectPic)), PICK_IMAGE_REQUEST);
+    public void openGallery() {
+        Intent intent = new Intent(getActivity(), GalleryActivity.class);
+        startActivity(intent);
     }
 
-
-    private void save(Bitmap finalBitmap, File file) throws IOException {
-        OutputStream output = null;
-        try {
-            output = new FileOutputStream(file);
-            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, output);
-
-        } finally {
-            if (null != output) {
-                output.flush();
-                output.close();
-            }
-        }
+    public void redirectToItemListPage() {
+        Intent intent = new Intent(getActivity(), ItemsActivity.class);
+        startActivity(intent);
     }
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.captureImgView:
                 capture();
                 break;
@@ -131,6 +94,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
                 openGallery();
                 break;
             case R.id.listItemImgView:
+                redirectToItemListPage();
                 break;
             case R.id.settingsImgView:
                 break;

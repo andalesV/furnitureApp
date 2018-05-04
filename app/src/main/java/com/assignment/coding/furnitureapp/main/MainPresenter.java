@@ -10,13 +10,15 @@ public class MainPresenter {
 
     private IMainView iMainView;
 
-    public MainPresenter(IMainView iMainView){
+    public MainPresenter(IMainView iMainView) {
         this.iMainView = iMainView;
     }
 
-    public void initializeElements(){
+    public void initializeElements() {
         iMainView.initializeElements();
     }
 
-    public void initializeMainFragment() { iMainView.initializeMainFragment();}
+    public void initializeMainFragment() {
+        iMainView.initializeMainFragment();
+    }
 }

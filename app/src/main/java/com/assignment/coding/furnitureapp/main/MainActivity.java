@@ -1,7 +1,10 @@
 package com.assignment.coding.furnitureapp.main;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,12 +33,13 @@ import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 import static com.assignment.coding.furnitureapp.Utils.Utils.LOG_TAG;
 import static com.assignment.coding.furnitureapp.Utils.Utils.getOutputMediaFile;
 
-public class MainActivity extends AppCompatActivity implements IMainView{
+public class MainActivity extends AppCompatActivity implements IMainView {
 
     @BindView(R.id.toolbar)
     public Toolbar mToolBar;
-
     private MainPresenter mainPresenter;
+
+    private boolean flag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements IMainView{
 
         mainPresenter = new MainPresenter(this);
         mainPresenter.initializeElements();
+
     }
 
     @Override
@@ -51,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements IMainView{
         super.onStart();
         mainPresenter.initializeMainFragment();
     }
+
 
     @Override
     public void initializeElements() {
@@ -60,11 +66,25 @@ public class MainActivity extends AppCompatActivity implements IMainView{
 
     @Override
     public void initializeMainFragment() {
-        MainFragment mainFragment = new MainFragment();
-        getFragmentManager()
-                .beginTransaction()
-                .add(R.id.container, mainFragment)
-                .commit();
+        if (flag) {
+            Intent intent = getIntent();
+            String location = intent.getExtras().getString("path");
+            Log.i(LOG_TAG, location);
+
+        } else {
+            MainFragment mainFragment = new MainFragment();
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, mainFragment)
+                    .commit();
+        }
+
+        /*
+        Intent listIntent = new Intent(mActivity.getString(R.string.BROADCAST_LOCATION));
+        listIntent.putExtra(mActivity.getString(R.string.location), mImagePaths.get(getPosition()));
+        mActivity.sendBroadcast(listIntent);*/
+
+
     }
 
 
