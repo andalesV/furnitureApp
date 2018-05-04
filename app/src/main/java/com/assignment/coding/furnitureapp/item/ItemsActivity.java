@@ -7,30 +7,31 @@ import android.support.v7.widget.Toolbar;
 
 import com.assignment.coding.furnitureapp.R;
 import com.assignment.coding.furnitureapp.main.MainActivity;
-import com.assignment.coding.furnitureapp.main.MainFragment;
-import com.assignment.coding.furnitureapp.views.IItemsViews;
+import com.assignment.coding.furnitureapp.views.IItemsView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ItemsActivity extends AppCompatActivity {
+public class ItemsActivity extends AppCompatActivity implements IItemsView {
 
     @BindView(R.id.toolbar)
     public Toolbar mToolbar;
 
+    private ItemsPresenter mItemsPresenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_items);
 
         ButterKnife.bind(this);
+        mItemsPresenter = new ItemsPresenter(this);
         setSupportActionBar(mToolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        initializeFragment();
+        mItemsPresenter.initializeFragment();
     }
 
     @Override
@@ -41,13 +42,12 @@ public class ItemsActivity extends AppCompatActivity {
         return true;
     }
 
-    private void initializeFragment() {
-        ItemsFragment itemsFragment = new ItemsFragment();
+    @Override
+    public void initializeFragment() {
+        ItemsFragmentFragment itemsFragment = new ItemsFragmentFragment();
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.item_container, itemsFragment)
                 .commit();
     }
-
-
 }

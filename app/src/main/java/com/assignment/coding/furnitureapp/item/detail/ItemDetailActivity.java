@@ -7,23 +7,25 @@ import android.support.v7.widget.Toolbar;
 
 import com.assignment.coding.furnitureapp.R;
 import com.assignment.coding.furnitureapp.item.ItemsActivity;
-import com.assignment.coding.furnitureapp.item.ItemsFragment;
-import com.assignment.coding.furnitureapp.main.MainActivity;
 import com.assignment.coding.furnitureapp.models.Items;
+import com.assignment.coding.furnitureapp.views.IItemDetailView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ItemDetailActivity extends AppCompatActivity {
+public class ItemDetailActivity extends AppCompatActivity implements IItemDetailView{
 
     @BindView(R.id.toolbar)
     public Toolbar mToolbar;
+
+    private ItemDetailPresenter mItemDetailPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
         ButterKnife.bind(this);
+        mItemDetailPresenter = new ItemDetailPresenter(this);
         setSupportActionBar(mToolbar);
         setSupportActionBar(mToolbar);
         if (getSupportActionBar() != null) {
@@ -31,7 +33,7 @@ public class ItemDetailActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        initializeFragment();
+        mItemDetailPresenter.initializeFragment();
     }
 
     @Override
@@ -42,7 +44,8 @@ public class ItemDetailActivity extends AppCompatActivity {
         return true;
     }
 
-    private void initializeFragment() {
+    @Override
+    public void initializeFragment() {
         Intent intent = getIntent();
         Items items = (Items) intent.getExtras().get("item");
 
@@ -51,7 +54,7 @@ public class ItemDetailActivity extends AppCompatActivity {
         bundle.putSerializable("item", items);
 
 
-        ItemDetailFragment imItemDetailFragment = new ItemDetailFragment();
+        ItemDetailFragmentFragment imItemDetailFragment = new ItemDetailFragmentFragment();
         imItemDetailFragment.setArguments(bundle);
 
         getSupportFragmentManager().beginTransaction()

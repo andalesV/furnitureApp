@@ -60,7 +60,6 @@ import static com.assignment.coding.furnitureapp.Utils.Utils.getOutputMediaFile;
 import static com.assignment.coding.furnitureapp.Utils.Utils.saveFromCamera;
 
 public class CameraActivity extends AppCompatActivity implements ICameraView {
-    private final String TAG = getClass().getSimpleName();
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 
     static {

@@ -79,12 +79,6 @@ public class MainActivity extends AppCompatActivity implements IMainView {
                     .commit();
         }
 
-        /*
-        Intent listIntent = new Intent(mActivity.getString(R.string.BROADCAST_LOCATION));
-        listIntent.putExtra(mActivity.getString(R.string.location), mImagePaths.get(getPosition()));
-        mActivity.sendBroadcast(listIntent);*/
-
-
     }
 
 

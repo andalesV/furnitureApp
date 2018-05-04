@@ -8,8 +8,7 @@ import java.util.List;
  * Created by victo on 04/05/2018.
  */
 
-public interface IItemsViews {
-    public void initializeElements();
+public interface IItemsFragmentViews {
 
     public void setItemList(List<Items> itemsList);
 

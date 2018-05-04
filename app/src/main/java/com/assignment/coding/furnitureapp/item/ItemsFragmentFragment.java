@@ -2,45 +2,45 @@ package com.assignment.coding.furnitureapp.item;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.assignment.coding.furnitureapp.R;
-import com.assignment.coding.furnitureapp.gallery.GalleryAdapter;
 import com.assignment.coding.furnitureapp.models.Items;
-import com.assignment.coding.furnitureapp.views.IItemsViews;
+import com.assignment.coding.furnitureapp.views.IItemsFragmentViews;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
  * Created by victo on 03/05/2018.
  */
 
-public class ItemsFragment extends Fragment implements IItemsViews {
+public class ItemsFragmentFragment extends Fragment implements IItemsFragmentViews {
 
     private Context context;
     private View view;
-    private ItemsPresenter itemsPresenter;
+    private ItemsFragmentPresenter itemsPresenter;
     private List<Items> mItemsList;
     private StaggeredGridLayoutManager sglm;
 
-
-    private RecyclerView mRecyclerView;
+    @BindView(R.id.mRecyclerView)
+    public RecyclerView mRecyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_items, container, false);
+        ButterKnife.bind(this, view);
         context = getActivity();
-        itemsPresenter = new ItemsPresenter(this, context);
-        itemsPresenter.initializeElements();
+        itemsPresenter = new ItemsFragmentPresenter(this, context);
 
         return view;
     }
@@ -57,11 +57,6 @@ public class ItemsFragment extends Fragment implements IItemsViews {
     public void onDestroy() {
         super.onDestroy();
         itemsPresenter.closeDbConnection();
-    }
-
-    @Override
-    public void initializeElements() {
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.mRecyclerView);
     }
 
     @Override
