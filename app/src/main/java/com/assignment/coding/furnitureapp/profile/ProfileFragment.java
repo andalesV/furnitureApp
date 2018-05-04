@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 
 import android.content.BroadcastReceiver;
@@ -20,7 +21,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.assignment.coding.furnitureapp.R;
 import com.assignment.coding.furnitureapp.item.ItemsActivity;
@@ -48,41 +48,42 @@ import static com.assignment.coding.furnitureapp.Utils.Utils.saveFromGallery;
  * Created by victor.t.andales.iii on 5/2/2018.
  */
 
-public class ProfileFragment extends Fragment implements IProfileView {
+public class ProfileFragment extends Fragment implements IProfileView, View.OnClickListener {
 
     private View view;
     private Data data;
     private Context context;
 
-    private EditText mNameEdt;
-    private EditText mDescriptionEdt;
-    private EditText mLocationEdt;
-    private EditText mCostEdt;
-    private Button mSaveBtn;
+    @BindView(R.id.nameEdt)
+    public EditText mNameEdt;
 
-    private Items mItems;
-    private ImageView imageView2;
+    @BindView(R.id.descriptionEdt)
+    public EditText mDescriptionEdt;
+
+    @BindView(R.id.locationEdt)
+    public EditText mLocationEdt;
+
+    @BindView(R.id.costEdt)
+    public EditText mCostEdt;
+
+    @BindView(R.id.saveBtn)
+    public Button mSaveBtn;
+
+    @BindView(R.id.imageView)
+    public ImageView mImageView;
 
     private ProfilePresenter profilePresenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_profile, container, false);
-
+        ButterKnife.bind(this,view);
         data = (Data) getArguments().get("data");
         context = getActivity();
 
         profilePresenter = new ProfilePresenter(this, context);
 
-        profilePresenter.initializeElements();
-
-        mSaveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                profilePresenter.create();
-            }
-        });
-
+        mSaveBtn.setOnClickListener(this);
         return view;
     }
 
@@ -106,20 +107,10 @@ public class ProfileFragment extends Fragment implements IProfileView {
     }
 
     @Override
-    public void initializeElements() {
-        imageView2 = (ImageView) view.findViewById(R.id.imageView);
-        mCostEdt = (EditText) view.findViewById(R.id.costEdt);
-        mDescriptionEdt = (EditText) view.findViewById(R.id.descriptionEdt);
-        mLocationEdt = (EditText) view.findViewById(R.id.locationEdt);
-        mNameEdt = (EditText) view.findViewById(R.id.nameEdt);
-        mSaveBtn = (Button) view.findViewById(R.id.saveBtn);
-    }
-
-    @Override
     public void display() {
         Glide.with(context).load(data.getLocation())
                 .placeholder(R.mipmap.ic_blur_on).centerCrop()
-                .into(imageView2);
+                .into(mImageView);
         mLocationEdt.setText(data.getLocation());
     }
 
@@ -149,8 +140,8 @@ public class ProfileFragment extends Fragment implements IProfileView {
     }
 
     @Override
-    public Double getCostEdtTxt() {
-        return Double.parseDouble(mCostEdt.getText().toString());
+    public String getCostEdtTxt() {
+        return mCostEdt.getText().toString();
     }
 
     @Override
@@ -158,6 +149,17 @@ public class ProfileFragment extends Fragment implements IProfileView {
         Intent intent = new Intent(getActivity(), ItemsActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+    }
+
+    @Override
+    public void showAlertDialog() {
+        DialogFragment dialogFragment = new com.assignment.coding.furnitureapp.dialog.AlertDialog();
+        dialogFragment.show(getActivity().getSupportFragmentManager(), "");
+    }
+
+    @Override
+    public void onClick(View v) {
+        profilePresenter.isEmpty();
     }
 
     private class SaveToExternalFiles extends AsyncTask<Void, Void, Void> {
