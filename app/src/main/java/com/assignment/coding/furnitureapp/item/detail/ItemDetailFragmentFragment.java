@@ -1,9 +1,12 @@
 package com.assignment.coding.furnitureapp.item.detail;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +18,7 @@ import android.widget.Toast;
 import com.assignment.coding.furnitureapp.R;
 import com.assignment.coding.furnitureapp.item.ItemsActivity;
 import com.assignment.coding.furnitureapp.models.Items;
-import com.assignment.coding.furnitureapp.views.IItemDetailView;
+import com.assignment.coding.furnitureapp.views.IItemDetailFragmentView;
 import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
@@ -25,69 +28,64 @@ import butterknife.ButterKnife;
  * Created by victo on 04/05/2018.
  */
 
-public class ItemDetailFragment extends Fragment implements IItemDetailView, View.OnClickListener {
+public class ItemDetailFragmentFragment extends Fragment implements IItemDetailFragmentView, View.OnClickListener {
 
     private View view;
 
+    @BindView(R.id.imageView)
     public ImageView mImageView;
 
+    @BindView(R.id.nameEdt)
     public EditText mNameEdt;
 
+    @BindView(R.id.descriptionEdt)
     public EditText mDescriptionEdt;
 
+    @BindView(R.id.locationEdt)
     public EditText mLocationEdt;
 
+    @BindView(R.id.costEdt)
     public EditText mCostEdt;
 
     private Items mItems;
 
-    private Button mUpdateBtn;
+    @BindView(R.id.updateBtn)
+    public Button mUpdateBtn;
 
-    private Button mDeleteBtn;
+    @BindView(R.id.deleteBtn)
+    public Button mDeleteBtn;
 
-    private ItemDetailPresenter mItemDetailPresenter;
+    private ItemDetailFragmentPresenter mItemDetailFragmentPresenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_detail_item, container, false);
-        mItemDetailPresenter = new ItemDetailPresenter(this);
-        mItemDetailPresenter.initializeElements();
+        mItemDetailFragmentPresenter = new ItemDetailFragmentPresenter(this);
+        ButterKnife.bind(this, view);
 
-        mItemDetailPresenter.getItem();
+        mUpdateBtn.setOnClickListener(this);
+        mDeleteBtn.setOnClickListener(this);
+
+        mItemDetailFragmentPresenter.getItem();
         return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mItemDetailPresenter.displayItem();
+        mItemDetailFragmentPresenter.displayItem();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mItemDetailPresenter.openDbConnection();
+        mItemDetailFragmentPresenter.openDbConnection();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mItemDetailPresenter.closeDbConnection();
-    }
-
-    @Override
-    public void initializeElements() {
-        mImageView = (ImageView) view.findViewById(R.id.imageView);
-        mNameEdt = (EditText) view.findViewById(R.id.nameEdt);
-        mDescriptionEdt = (EditText) view.findViewById(R.id.descriptionEdt);
-        mLocationEdt = (EditText) view.findViewById(R.id.locationEdt);
-        mCostEdt = (EditText) view.findViewById(R.id.costEdt);
-
-        mUpdateBtn = (Button) view.findViewById(R.id.updateBtn);
-        mDeleteBtn = (Button) view.findViewById(R.id.deleteBtn);
-
-        mUpdateBtn.setOnClickListener(this);
-        mDeleteBtn.setOnClickListener(this);
+        mItemDetailFragmentPresenter.closeDbConnection();
     }
 
     @Override
@@ -138,8 +136,8 @@ public class ItemDetailFragment extends Fragment implements IItemDetailView, Vie
     }
 
     @Override
-    public Double getCostEdtTxt() {
-        return Double.parseDouble(mCostEdt.getText().toString());
+    public String getCostEdtTxt() {
+        return mCostEdt.getText().toString();
     }
 
     @Override
@@ -150,19 +148,52 @@ public class ItemDetailFragment extends Fragment implements IItemDetailView, Vie
     }
 
     @Override
-    public void onClick(View v) {
+    public void update() {
         int result = 0;
+        result = mItemDetailFragmentPresenter.update();
+        if (result > 0)
+            Toast.makeText(getActivity(), "Successful Update Transaction!", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showAlertDialog() {
+        DialogFragment dialogFragment = new com.assignment.coding.furnitureapp.dialog.AlertDialog();
+        dialogFragment.show(getActivity().getSupportFragmentManager(), "");
+    }
+
+    @Override
+    public void showDeleteAlertDialog() {
+        AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+        builder.setMessage("Do you want to delete this item?")
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mItemDetailFragmentPresenter.execute();
+                    }
+                }).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                }
+        });
+        builder.create().show();
+    }
+
+    @Override
+    public void delete() {
+        int result = 0;
+        result = mItemDetailFragmentPresenter.delete();
+        if (result > 0)
+            mItemDetailFragmentPresenter.redirectToItemListPage();
+    }
+
+
+    @Override
+    public void onClick(View v) {
 
         switch (v.getId()) {
             case R.id.updateBtn:
-                result = mItemDetailPresenter.update();
-                if (result > 0)
-                    Toast.makeText(getActivity(), "Successful Update Transaction!", Toast.LENGTH_LONG).show();
+                mItemDetailFragmentPresenter.isEmpty();
                 break;
             case R.id.deleteBtn:
-                result = mItemDetailPresenter.delete();
-                if (result > 0)
-                    mItemDetailPresenter.redirectToItemListPage();
+                mItemDetailFragmentPresenter.showDeleteAlertDialog();
                 break;
         }
     }

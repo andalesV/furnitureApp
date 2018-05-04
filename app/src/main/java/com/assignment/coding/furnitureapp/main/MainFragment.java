@@ -18,6 +18,7 @@ import com.assignment.coding.furnitureapp.R;
 import com.assignment.coding.furnitureapp.camera.CameraActivity;
 import com.assignment.coding.furnitureapp.gallery.GalleryActivity;
 import com.assignment.coding.furnitureapp.item.ItemsActivity;
+import com.assignment.coding.furnitureapp.views.IMainFragmentView;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,13 +35,9 @@ import static com.assignment.coding.furnitureapp.Utils.Utils.getOutputMediaFile;
  * Created by victo on 03/05/2018.
  */
 
-public class MainFragment extends Fragment implements View.OnClickListener {
+public class MainFragment extends Fragment implements IMainFragmentView, View.OnClickListener {
 
     private View view;
-
-    private Context context;
-
-    private int PICK_IMAGE_REQUEST = 1;
 
     @BindView(R.id.captureImgView)
     public ImageView captureImgView;
@@ -54,6 +51,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.settingsImgView)
     public ImageView settingsImgView;
 
+    public MainFragmentPresenster mMainFragmentPresenster;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,21 +62,24 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         listItemImgView.setOnClickListener(this);
         settingsImgView.setOnClickListener(this);
 
-        context = getActivity();
+        mMainFragmentPresenster = new MainFragmentPresenster(this);
 
         return view;
     }
 
+    @Override
     public void capture() {
-        Intent intent = new Intent(context, CameraActivity.class);
+        Intent intent = new Intent(getActivity(), CameraActivity.class);
         startActivity(intent);
     }
 
+    @Override
     public void openGallery() {
         Intent intent = new Intent(getActivity(), GalleryActivity.class);
         startActivity(intent);
     }
 
+    @Override
     public void redirectToItemListPage() {
         Intent intent = new Intent(getActivity(), ItemsActivity.class);
         startActivity(intent);
@@ -88,13 +89,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.captureImgView:
-                capture();
+                mMainFragmentPresenster.capture();
                 break;
             case R.id.galleryImgView:
-                openGallery();
+                mMainFragmentPresenster.openGallery();
                 break;
             case R.id.listItemImgView:
-                redirectToItemListPage();
+                mMainFragmentPresenster.redirectToItemListPage();
                 break;
             case R.id.settingsImgView:
                 break;

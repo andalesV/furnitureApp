@@ -27,22 +27,18 @@ public class ProfilePresenter {
         mDbAdapter = new DbAdapter(mContext);
     }
 
-    public void initializeElements() {
-        iProfileView.initializeElements();
-    }
-
     public void display() {
         iProfileView.display();
     }
 
-    public void create() {
+    private void create() {
         iProfileView.create();
 
         Items items = new Items();
         items.setName(iProfileView.getNameEdtTxt());
         items.setDescription(iProfileView.getDescriptionEdtTxt());
         items.setLocation(iProfileView.getLocationEdtTxt());
-        items.setCost(iProfileView.getCostEdtTxt());
+        items.setCost(Double.parseDouble(iProfileView.getCostEdtTxt()));
 
         long result = mDbAdapter.saveItem(items);
     }
@@ -63,4 +59,11 @@ public class ProfilePresenter {
         mDbAdapter.close();
     }
 
+    public void isEmpty() {
+        if (iProfileView.getNameEdtTxt().isEmpty() || iProfileView.getDescriptionEdtTxt().isEmpty() ||
+                iProfileView.getLocationEdtTxt().isEmpty() || iProfileView.getCostEdtTxt().toString().isEmpty())
+            iProfileView.showAlertDialog();
+        else
+            create();
+    }
 }

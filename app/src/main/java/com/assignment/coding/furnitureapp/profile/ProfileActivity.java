@@ -1,25 +1,19 @@
 package com.assignment.coding.furnitureapp.profile;
 
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.widget.Toast;
+
 
 import com.assignment.coding.furnitureapp.R;
-import com.assignment.coding.furnitureapp.gallery.GalleryFragment;
 import com.assignment.coding.furnitureapp.main.MainActivity;
 import com.assignment.coding.furnitureapp.models.Data;
-import com.assignment.coding.furnitureapp.views.IProfileView;
-
-import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.assignment.coding.furnitureapp.R.string.location;
 import static com.assignment.coding.furnitureapp.Utils.Utils.LOG_TAG;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -81,8 +75,6 @@ public class ProfileActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.profile_container, profileFragment)
                 .commit();
-        Toast.makeText(getApplicationContext(), location, Toast.LENGTH_LONG).show();
-
     }
 
 }

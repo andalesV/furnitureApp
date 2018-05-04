@@ -7,8 +7,6 @@ import com.assignment.coding.furnitureapp.models.Items;
  */
 
 public interface IProfileView {
-    public void initializeElements();
-
     public void display();
 
     public void create();
@@ -21,7 +19,9 @@ public interface IProfileView {
 
     public String getLocationEdtTxt();
 
-    public Double getCostEdtTxt();
+    public String getCostEdtTxt();
 
     public void redirectToItemListPage();
+
+    public void showAlertDialog();
 }
