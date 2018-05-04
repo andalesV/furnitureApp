@@ -1,10 +1,12 @@
 package com.assignment.coding.furnitureapp.models;
 
+import java.io.Serializable;
+
 /**
  * Created by victor.t.andales.iii on 5/2/2018.
  */
 
-public class Items {
+public class Items implements Serializable {
 
     private int id;
     private String name;

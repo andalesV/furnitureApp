@@ -3,4 +3,7 @@
     <string name="storageFileName">furnitureApp</string>
     <string name="pattern">yyyyMMdd_HHmmss</string>
     <string name="selectPic">Select Picture</string>
+    <string name="BROADCAST_ITEM">com.assignment.coding.furnitureapp</string>
+    <string name="location">location</string>
+    <string name="save">Save</string>
 </resources>
